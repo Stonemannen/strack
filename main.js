@@ -7,6 +7,7 @@ var fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
 var request = require('request');
 const Blockchain = require('./blockchain');
+const Transaction = require('./transaction');
 /*request('http://localhost:8080/api', function (error, response, body) {
   console.log('error:', error); // Print the error if one occurred
   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -49,7 +50,7 @@ Blockchain.saveToFile();
 Blockchain.sync();//console.log(Blockchain.chain);
 //console.log(JSON.stringify(Blockchain.chain));
 
-//console.log(JSON.stringify(Blockchain.chain));
+console.log(JSON.stringify(Blockchain.chain));
 
 
 //download blockchain
