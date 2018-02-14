@@ -6,6 +6,8 @@ var http = require('http');
 var fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
 var request = require('request');
+var crypto = require("crypto");
+var eccrypto = require("eccrypto");
 const Blockchain = require('./blockchain');
 const Transaction = require('./transaction');
 /*request('http://localhost:8080/api', function (error, response, body) {

@@ -53,6 +53,19 @@ class transactions{
       if (err) return console.log(err);
     });
   }
+
+  generateSig(privateKey, msg){
+    eccrypto.sign(privateKey, msg).then(function(sig) {
+      console.log("Signature in DER format:", sig);
+      eccrypto.verify(publicKey, msg, sig).then(function() {
+        console.log("Signature is OK");
+      }).catch(function() {
+        console.log("Signature is BAD");
+      });
+    });
+    return sig;
+  }
+
 }
 
 const Transactions = new transactions();
