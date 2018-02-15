@@ -1,4 +1,4 @@
-var exec = require('child_process').exec;
+ var exec = require('child_process').exec;
 //exec('node server.js', function callback(error, stdout, stderr){
     // result
 //});
@@ -10,6 +10,10 @@ var crypto = require("crypto");
 var eccrypto = require("eccrypto");
 const Blockchain = require('./blockchain');
 const Transactions = require('./transaction');
+var forge = require('node-forge');
+var ossl = require('openssl-wrapper');
+Base58 = require("base-58");
+var arrayBufferToBuffer = require('arraybuffer-to-buffer');
 /*request('http://localhost:8080/api', function (error, response, body) {
   console.log('error:', error); // Print the error if one occurred
   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -71,6 +75,7 @@ class Block {
 
 //let Blockchain = new Blockchain();
 Blockchain.loadFromFile();
+//Transactions.loadFromFile();
 //console.log('Mining block 1...');
 //var latestblock = Blockchain.chain[Blockchain.chain.length - 1];
 //console.log(latestblock.index + 1);
@@ -81,13 +86,14 @@ Blockchain.loadFromFile();
 //Blockchain.addBlock(new Block(latestblock.index + 1, "21/07/2017", { amount: 8 }));
 //Blockchain.sync();//console.log(Blockchain.chain);
 //console.log(JSON.stringify(Blockchain.chain));
-
 //console.log(JSON.stringify(Blockchain.chain));
 var privateKey = Transactions.generatePrivateKey();
-console.log(privateKey);
 var publicKey = Transactions.generatePublicKey(privateKey);
 console.log(publicKey);
-Transactions.generateSig(privateKey, "hello");
+console.log(privateKey);
+
+
+Transactions.addTransaction(publicKey, "EEsBu3RTwtLSmDKri1k9WgrvfsZKpz/s3gkwWeGH4Yg=", 1, privateKey);
 //download blockchain
 /*var adressss = 'http://'+ ip + ':8080/api/downloadBlockchain';
 var download = function(url, dest, cb) {
