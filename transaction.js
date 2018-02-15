@@ -62,8 +62,17 @@ class transactions{
       }).catch(function() {
         console.log("Signature is BAD");
       });
+      return sig;
     });
-    return sig;
+
+  }
+
+  generatePrivateKey(){
+    return crypto.randomBytes(32);
+  }
+
+  generatePublicKey(privateKey){
+    return eccrypto.getPublic(privateKey);
   }
 
 }
