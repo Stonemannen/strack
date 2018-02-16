@@ -95,6 +95,7 @@ class Blockchain{
         //console.log(ip[i]);
         var address = 'http://' + ip[i] + ':8080/api/getLatestBlock'
         var ipo = ip[i]
+        console.log("ipo " + ipo);
         request(address, function (error, response, body) {
           let stracka = new Blockchain();
           stracka.loadFromFile();
