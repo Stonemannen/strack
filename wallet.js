@@ -76,6 +76,7 @@ if(process.argv[2] === "-h" || process.argv[2] === "--help"){
 
   balance = checkBalance();
   if (balance >= Number(process.argv[4])) {
+
     var data = {
       inputs: [
 
