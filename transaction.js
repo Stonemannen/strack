@@ -4,6 +4,7 @@ var fs = require('fs');
 var Base58 = require("base-58");
 const SHA256 = require("crypto-js/sha256");
 var sig64;
+const CryptoEdDSAUtil = require('./cryptoEdDSAUtil');
 
 class transaction{
   constructor(type, data) {
@@ -69,15 +70,16 @@ class transactions{
   }
 
   addTransaction(type, inputs, outputs, privateKey64){
-    var pinputs = JSON.parse(inputs);
+    /*var pinputs = JSON.parse(inputs);
     for (var i = 0; i < pinputs.length; i++) {
      pinputs[i]
-    }
-    var msg = SHA256().toString();
+   }*/
+    var msg = SHA256("hello").toString();
     msg = crypto.createHash("sha256").update(msg).digest();
     console.log("msg " + msg.toString('base64'));
     var publicKey = new Buffer(from, 'base64');
     var privateKey = new Buffer(privateKey64, 'base64');
+    console.log("ecc" + eccrypto.sign(privateKey, msg));
     eccrypto.sign(privateKey, msg).then(function(sig) {
       sig64 = sig.toString('base64');
 
@@ -96,6 +98,8 @@ class transactions{
       //this.transactions.push(new transaction(from, too, amount, sig64));
     });
     //saveToFile();
+  }
+  test(){
   }
 
 

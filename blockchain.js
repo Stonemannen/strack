@@ -75,6 +75,7 @@ class Blockchain{
       var ip = text.split(",");
       var latestblock =  this.chain[this.chain.length - 1];
       var blockIndex = latestblock.index;
+      console.log(blockIndex);
       console.log('bl: ', blockIndex);
       var sync = false;
       var rblockchain = '';
@@ -89,12 +90,14 @@ class Blockchain{
           console.log('biudy:', body);
           rblockchain = JSON.parse(body);
           console.log(rblockchain.index);
+          console.log(blockIndex);
           if (Number(rblockchain.index) !== blockIndex) {
             console.log("sync");
             sync = true;
 
           }else{sync = false;}
           if (sync) {
+            console.log(Number(rblockchain.index) < blockIndex);
             if(Number(rblockchain.index) < blockIndex){
               if((blockIndex - Number(rblockchain.index)) > 1){
                 var addressss = 'http://'+ ipo + ':8080/api/sync/'
@@ -119,6 +122,13 @@ class Blockchain{
                   });
                 }
               }
+            }else {
+              var addressss = 'http://'+ ipo + ':8080/api/sync/'
+              request(addressss, function (error, response, body) {
+                console.log('error:', error); // Print the error if one occurred
+                console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                console.log('body:', body); // Print the HTML for the Google homepage.
+              });
             }
           }
         });
