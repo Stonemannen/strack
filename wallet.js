@@ -30,7 +30,6 @@ stdin.addListener("data", function(d) {
     }else if (confstate == 3) {
       if (d.toString().trim() == 'y') {
         fs.writeFile('wallet.txt', '{"publicKey":"' + publicKey + '","privateKey":"' + privateKey + '"}"', function (err) {});
-        process.exit(0);
       }else if (d.toString().trim() == 'n') {
         process.exit(0);
       }
