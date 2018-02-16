@@ -1,3 +1,4 @@
+"use strict"
 const crypto = require('crypto');
 const elliptic = require('elliptic');
 const EdDSA = elliptic.eddsa;
@@ -13,7 +14,7 @@ class CryptoEdDSAUtil {
 
     static generateKeyPairFromSecret(secret) {
         // Create key pair from secret
-        let keyPair = ec.keyFromSecret(secret); // hex string, array or Buffer        
+        let keyPair = ec.keyFromSecret(secret); // hex string, array or Buffer
         console.debug(`Public key: \n${elliptic.utils.toHex(keyPair.getPublic())}`);
         return keyPair;
     }
