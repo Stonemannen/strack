@@ -217,7 +217,7 @@ router.get('/sync', function(req, res) {
     //res.json(blockchain.strack.chain);
     var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     ip = ip.replace('::ffff:','');
-    bc.syncip(ip);
+    bc.sync();
     console.log(ip);
     res.send("200");
 
