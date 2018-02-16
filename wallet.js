@@ -1,3 +1,4 @@
+"use strict"
 var fs = require('fs');
 //var text = fs.readFileSync('wallet.txt','utf8');
 //var settings = JSON.parse(text);
