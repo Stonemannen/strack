@@ -15,7 +15,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: false }));
 
 class Block {
-  constructor(index, timestamp, data, previousHash = '') {
+  constructor(index, timestamp, data, previousHash) {
     this.index = index;
     this.previousHash = previousHash;
     this.timestamp = timestamp;
