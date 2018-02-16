@@ -139,7 +139,7 @@ class Blockchain{
     }
 
     loadFromFile(){
-      var text = fs.readFileSync('blockchaintest.txt','utf8');
+      var text = fs.readFileSync('blockchain.txt','utf8');
       var blockchain = JSON.parse(text);
       for(let i = 1; i < blockchain.length; i++){
         this.chain[i] = blockchain[i];
