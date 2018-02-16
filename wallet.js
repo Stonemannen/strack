@@ -1,13 +1,13 @@
 
 var fs = require('fs');
-//var text = fs.readFileSync('wallet.txt','utf8');
-//var settings = JSON.parse(text);
-var publicKey;
-var privateKey;
+var text = fs.readFileSync('wallet.txt','utf8');
+var settings = JSON.parse(text);
+var publicKey = settings[publicKey];
+var privateKey = settings[privateKey];
 var confstate = 0;
+var balance = 0;
 var stdin = process.openStdin();
 const CryptoEdDSAUtil = require('./cryptoEdDSAUtil');
-
 stdin.addListener("data", function(d) {
     // note:  d is an object, and when converted to a string it will
     // end with a linefeed.  so we (rather crudely) account for that
@@ -29,7 +29,7 @@ stdin.addListener("data", function(d) {
       confstate = 3;
     }else if (confstate == 3) {
       if (d.toString().trim() == 'y') {
-        fs.writeFile('wallet.txt', '{"publicKey":"' + publicKey + '","privateKey":"' + privateKey + '"}"', function (err) {});
+        fs.writeFile('wallet.txt', '{"publicKey":"' + publicKey + '","privateKey":"' + privateKey + '"}', function (err) {});
       }else if (d.toString().trim() == 'n') {
         process.exit(0);
       }
@@ -45,6 +45,7 @@ if(process.argv[2] === "-h" || process.argv[2] === "--help"){
   console.log(" -s [address] [amount]     Send strack to address");
   process.exit(0);
 }else if (process.argv[2] === "-b") {
+  console.log("Your balance is: " + checkBalance()/1000000 + " Strack");
 
 }else if (process.argv[2] === "-s") {
 
@@ -62,5 +63,22 @@ if(process.argv[2] === "-h" || process.argv[2] === "--help"){
 }
 
 function checkBalance(){
+  var text = fs.readFileSync('blockchain.txt','utf8');
+  var blockchain = JSON.parse(text);
+  for (var i = 1; i < blockchain.length; i++) {
+    for (var j = 0; j < blockchain[i].data.length; j++) {
+      for (var k = 0; k < blockchain[i].data[j].data.outputs.length; k++) {
+        if (blockchain[i].data[j].data.outputs[k].adress == publicKey) {
+          balance += blockchain[i].data[j].data.outputs[k].amount;
 
+        }
+      }
+    }
+  }
+  return balance;
 }
+
+
+
+
+

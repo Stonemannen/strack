@@ -99,14 +99,6 @@ class Blockchain{
           if (sync) {
             console.log(Number(rblockchain.index) < blockIndex);
             if(Number(rblockchain.index) < blockIndex){
-              if((blockIndex - Number(rblockchain.index)) > 1){
-                var addressss = 'http://'+ ipo + ':8080/api/sync/'
-                request(addressss, function (error, response, body) {
-                  console.log('error:', error); // Print the error if one occurred
-                  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                  console.log('body:', body); // Print the HTML for the Google homepage.
-                });
-              }else {
                 for (var j = Number(rblockchain.index); j < blockIndex; j++) {
                   let strackb = new Blockchain();
                   strackb.loadFromFile();
@@ -121,8 +113,8 @@ class Blockchain{
                     console.log(body);
                   });
                 }
-              }
-            }else {
+            }
+            else {
               var addressss = 'http://'+ ipo + ':8080/api/sync/'
               request(addressss, function (error, response, body) {
                 console.log('error:', error); // Print the error if one occurred
@@ -159,7 +151,7 @@ class Blockchain{
     }
 
     saveToFile(){
-      fs.writeFile('blockchaintest.txt', JSON.stringify(this.chain), function (err) {
+      fs.writeFile('blockchain.txt', JSON.stringify(this.chain), function (err) {
         if (err) return console.log(err);
       });
     }
