@@ -129,7 +129,7 @@ function checkBalance(){
       }
       for (var l = 0; l < blockchain[i].data[j].data.inputs.length; l++) {
         for (var m = 0; m < unused.length; m++) {
-          if (blockchain[i].data[j].data.inputs[l].transaction == unused[m].hash) {
+          if (blockchain[i].data[j].data.inputs[l].hash == unused[m].hash) {
             unused.splice(m,1);
           }
         }

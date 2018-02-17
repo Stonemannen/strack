@@ -68,6 +68,9 @@ var latestblock = Blockchain.chain[Blockchain.chain.length - 1];
 //Blockchain.addBlock(new Block(latestblock.index + 1, "20/07/2017", [{"id":"3uNTynPO7jUSFO6enAwTOaC3QGXt4xvANrOuK7+Ab78=","hash":"aeafc02d65f8f5c4268eb3a14f2134aab52997e7ba5382aa2b53ade08fe13f65","type":"reward","data":{"inputs":[],"outputs":[{"amount":50000000,"address":"9dc09fe0858a671635e23add95cc30af6776c9702d3786d4d45aa4e1b2a1e4d4"}]}}]));
 //var latestblock = Blockchain.chain[Blockchain.chain.length - 1];
 Blockchain.saveToFile();
+var n = 30
+var dec = 15
+console.log((n/dec)%1==0);
 //console.log('Mining block 2...');
 //Blockchain.addBlock(new Block(latestblock.index + 1, "21/07/2017", { amount: 8 }));
 //Blockchain.sync();//console.log(Blockchain.chain);

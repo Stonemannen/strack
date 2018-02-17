@@ -45,16 +45,25 @@ class Block {
     console.log("BLOCK MINED: " + this.hash);
   }
 }
+Blockchain.loadFromFile();
 
 while (true) {
-  Blockchain.loadFromFile();
+
   var text = fs.readFileSync('transactions.txt','utf8');
-  var reward = new transaction("reward", '{"inputs":[],"outputs":[{"amount":50000000,"address":"' + publicKey + '"}]}');
+  var reward = new transaction("reward", {inputs:[],outputs:[{amount:50000000,address: publicKey}]});
+  reward = JSON.stringify(reward);
+  reward = JSON.parse(reward)
   var trans = JSON.parse(text);
-  var data = {
-
+  var data = [];
+  data[0] = reward
+  for (var i = 0; i < trans.length; i++) {
+    data[i + 1] = trans[i];
+    trans.splice(i, 1);
   }
-  Blockchain.addBlock(new Block(latestblock.index + 1, "21/07/2017", ));
-
+  fs.writeFile('transactions.txt', '[]', function (err) {if (err) return console.log(err);});
+  var latestblock = Blockchain.chain[Blockchain.chain.length - 1];
+  Blockchain.addBlock(new Block(latestblock.index + 1, Date.now(), data));
+  console.log("block mined");
   Blockchain.saveToFile();
-}
+
+ }

@@ -30,7 +30,10 @@ class Block {
 class Blockchain{
     constructor() {
         this.chain = [this.createGenesisBlock()];
-        this.difficulty = 2;
+        this.difficulty = Number(fs.readFileSync('difficulty.txt','utf8'));
+        if ((this.chain.length/15)%1==0) {
+          this.updateDifficulty();
+        }
     }
 
     createGenesisBlock() {
@@ -45,10 +48,12 @@ class Blockchain{
         newBlock.previousHash = this.getLatestBlock().hash;
         newBlock.mineBlock(this.difficulty);
         this.chain.push(newBlock);
+        this.updateDifficulty();
     }
 
     addRawBlock(newBlock) {
       this.chain.push(newBlock);
+      this.updateDifficulty();
     }
 
     isChainValid() {
@@ -127,7 +132,7 @@ class Blockchain{
 
 
       }
-
+      this.updateDifficulty();
     }
 
     loadFromFile(){
@@ -154,6 +159,21 @@ class Blockchain{
       fs.writeFile('blockchain.txt', JSON.stringify(this.chain), function (err) {
         if (err) return console.log(err);
       });
+    }
+
+    updateDifficulty(){
+      if ((this.chain.length/15)%1==0) {
+        var first = this.chain[this.chain.length-15].timestamp;
+        var second = this.chain[this.chain.length].timestamp;
+        if (second - first > 7200000) {
+          this.difficulty = this.difficulty-1;
+        }else if (second - first < 7200000) {
+          this.difficulty = this.difficulty+1;
+        }
+        fs.writeFile('difficulty.txt', this.difficulty, function (err) {
+          if (err) return console.log(err);
+        });
+      }
     }
 }
 
