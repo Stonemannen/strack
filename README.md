@@ -1,5 +1,17 @@
 # strack
 
+Quick start
+-------
+
+```sh
+#Run a node
+$ node server.js
+
+#Run wallet
+$ node wallet.js
+```
+
+
 License
 -------
 
