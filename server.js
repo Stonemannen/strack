@@ -95,7 +95,6 @@ class Blockchain{
         //console.log(ip[i]);
         var address = 'http://' + ip[i] + ':8080/api/getLatestBlock'
         var ipo = ip[i]
-        console.log("ipo " + ipo);
         request(address, function (error, response, body) {
           let stracka = new Blockchain();
           stracka.loadFromFile();
@@ -112,14 +111,6 @@ class Blockchain{
           if (sync) {
             console.log(Number(rblockchain.index) < blockIndex);
             if(Number(rblockchain.index) < blockIndex){
-              if((blockIndex - Number(rblockchain.index)) > 1){
-                var addressss = 'http://'+ ipo + ':8080/api/sync/'
-                request(addressss, function (error, response, body) {
-                  console.log('error:', error); // Print the error if one occurred
-                  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                  console.log('body:', body); // Print the HTML for the Google homepage.
-                });
-              }else {
                 for (var j = Number(rblockchain.index); j < blockIndex; j++) {
                   let strackb = new Blockchain();
                   strackb.loadFromFile();
@@ -134,9 +125,14 @@ class Blockchain{
                     console.log(body);
                   });
                 }
-              }
-            }else {
-
+            }
+            else {
+              var addressss = 'http://'+ ipo + ':8080/api/sync/'
+              request(addressss, function (error, response, body) {
+                console.log('error:', error); // Print the error if one occurred
+                console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                console.log('body:', body); // Print the HTML for the Google homepage.
+              });
             }
           }
         });
@@ -153,19 +149,22 @@ class Blockchain{
         this.chain[i] = blockchain[i];
       }
     }
-    saveToFile(){
-      fs.writeFile('blockchain.txt', JSON.stringify(this.chain), function (err) {});
-    }
 
     syncip(ip){
       var latestblock =  this.chain[this.chain.length - 1];
       var blockIndex = latestblock.index;
       var adress = 'http://' + ip + ':8080/api/getBlock/' + blockIndex.toString();
-      request(adress, function (error, response, body) {
+      var res = '';
+      request(address, function (error, response, body) {
         console.log('error:', error); // Print the error if one occurred
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         console.log('body:', body); // Print the HTML for the Google homepage.
+      });
+    }
 
+    saveToFile(){
+      fs.writeFile('blockchain.txt', JSON.stringify(this.chain), function (err) {
+        if (err) return console.log(err);
       });
     }
 }

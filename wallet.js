@@ -1,9 +1,11 @@
 "use strict"
 var fs = require('fs');
+var crypto = require("crypto");
+const SHA256 = require("crypto-js/sha256");
 var text = fs.readFileSync('wallet.txt','utf8');
 var settings = JSON.parse(text);
-var publicKey = settings[publicKey];
-var privateKey = settings[privateKey];
+var publicKey = settings.publicKey;
+var privateKey = settings.privateKey;
 var confstate = 0;
 var balance = 0;
 var stdin = process.openStdin();
@@ -72,18 +74,30 @@ if(process.argv[2] === "-h" || process.argv[2] === "--help"){
   console.log("Your balance is: " + checkBalance()/1000000 + " Strack");
 
 }else if (process.argv[2] === "-s") {
-  console.log(Number(process.argv[4]));
-
   balance = checkBalance();
   if (balance >= Number(process.argv[4])) {
-
-    var data = {
-      inputs: [
-
-      ]
+    var unused = unusedTransctions();
+    var change = balance - Number(process.argv[4])
+    var pub = publicKey;
+    var keyPair = CryptoEdDSAUtil.generateKeyPairFromSecret(privateKey);
+    for (var i = 0; i < unused.length; i++) {
+      unused[i].signature = CryptoEdDSAUtil.signHash(keyPair, SHA256(unused[i].hash + unused[i].index + unused[i].amount + unused[i].address));
     }
+    var data = {
+      inputs: unused,
+      outputs: [{
+        amount: Number(process.argv[4]),
+        address: process.argv[3]
+      }, {
+        amount: change,
+        address: pub
+      }]
+    }
+    console.log(data);
     var text = fs.readFileSync('transactions.txt','utf8');
-    fs.writeFile('transactions.txt', text + "\n" + new transaction("regular"), function (err) {});
+    var trans = JSON.parse(text);
+    trans.push(new transaction("regualar", data));
+    fs.writeFile('transactions.txt', JSON.stringify(trans), function (err) {});
   }
   else {
     console.log("There are not enough strack in your account");
@@ -104,23 +118,55 @@ if(process.argv[2] === "-h" || process.argv[2] === "--help"){
 function checkBalance(){
   var text = fs.readFileSync('blockchain.txt','utf8');
   var blockchain = JSON.parse(text);
+  var unused = [];
   for (var i = 1; i < blockchain.length; i++) {
     for (var j = 0; j < blockchain[i].data.length; j++) {
       for (var k = 0; k < blockchain[i].data[j].data.outputs.length; k++) {
-        if (blockchain[i].data[j].data.outputs[k].adress == publicKey) {
-          balance += blockchain[i].data[j].data.outputs[k].amount;
+        if (blockchain[i].data[j].data.outputs[k].address == publicKey) {
+          unused.push({hash:blockchain[i].data[j].hash, index: j, amount: blockchain[i].data[j].data.outputs[k].amount});
 
         }
       }
       for (var l = 0; l < blockchain[i].data[j].data.inputs.length; l++) {
-        if (blockchain[i].data[j].data.inputs[l].adress == publicKey) {
-          balance += blockchain[i].data[j].data.inputs[l].amount;
-
+        for (var m = 0; m < unused.length; m++) {
+          if (blockchain[i].data[j].data.inputs[l].transaction == unused[m].hash) {
+            unused.splice(m,1);
+          }
         }
+
       }
     }
   }
+  for (var i = 0; i < unused.length; i++) {
+    balance += unused[i].amount
+  }
   return balance;
+
+}
+
+function unusedTransctions(){
+  var unused = [];
+  var text = fs.readFileSync('blockchain.txt','utf8');
+  var blockchain = JSON.parse(text);
+  for (var i = 1; i < blockchain.length; i++) {
+    for (var j = 0; j < blockchain[i].data.length; j++) {
+      for (var k = 0; k < blockchain[i].data[j].data.outputs.length; k++) {
+        if (blockchain[i].data[j].data.outputs[k].address == publicKey) {
+          unused.push({hash:blockchain[i].data[j].hash, index: j, amount: blockchain[i].data[j].data.outputs[k].amount, address: blockchain[i].data[j].data.outputs[k].address});
+        }
+      }
+      for (var l = 0; l < blockchain[i].data[j].data.inputs.length; l++) {
+        for (var m = 0; m < unused.length; m++) {
+          if (blockchain[i].data[j].data.inputs[l].transaction == unused[m].hash) {
+
+            unused.splice(m,1);
+          }
+        }
+
+      }
+    }
+  }
+  return unused;
 }
 
 
