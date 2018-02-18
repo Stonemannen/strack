@@ -200,6 +200,17 @@ router.get('/downloadBlockchain', function(req, res) {
 
 });
 
+router.get('/addNode', function(req, res) {
+    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    ip = ip.replace('::ffff:','');
+    var text = fs.readFileSync('nodelist.txt','utf8');
+    fs.writeFile('nodelist.txt', text + ip + ",", function (err) {
+      if (err) return console.log(err);
+    });
+    res.send("200");
+
+});
+
 router.get('/getBlock/:blockIndex', function(req, res) {
     //console.log(strack.chain);
     //res.json(blockchain.strack.chain);

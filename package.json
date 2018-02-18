@@ -2,12 +2,12 @@
   "name": "blockchain",
   "version": "1.0.0",
   "description": "blockchain test",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Lucas Drufva",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "arraybuffer-to-buffer": "0.0.4",
     "axios": "^0.17.1",
