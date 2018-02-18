@@ -163,8 +163,8 @@ class Blockchain{
 
     updateDifficulty(){
       if ((this.chain.length/15)%1==0) {
-        var first = this.chain[this.chain.length-15].timestamp;
-        var second = this.chain[this.chain.length].timestamp;
+        var first = this.chain[this.chain.length-16].timestamp;
+        var second = this.chain[this.chain.length-1].timestamp;
         if (second - first > 7200000) {
           this.difficulty = this.difficulty-1;
         }else if (second - first < 7200000) {
