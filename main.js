@@ -72,7 +72,7 @@ var dec = 15
 console.log((n/dec)%1==0);
 //console.log('Mining block 2...');
 //Blockchain.addBlock(new Block(latestblock.index + 1, "21/07/2017", { amount: 8 }));
-//Blockchain.sync();//console.log(Blockchain.chain);
+Blockchain.sync();//console.log(Blockchain.chain);
 //console.log(JSON.stringify(Blockchain.chain));
 //console.log(JSON.stringify(Blockchain.chain));
 //var privateKey = Transactions.generatePrivateKey();

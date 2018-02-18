@@ -8,6 +8,7 @@ var text = fs.readFileSync('wallet.txt','utf8');
 var settings = JSON.parse(text);
 var publicKey = settings.publicKey;
 var privateKey = settings.privateKey;
+var sleep = require('sleep');
 
 class transaction{
   constructor(type, data) {
@@ -66,7 +67,18 @@ while (true) {
   var latestblock = blockchain.chain[blockchain.chain.length - 1];
   blockchain.addBlock(new Block(latestblock.index + 1, Date.now(), data));
   console.log("block mined");
+  var address = 'http://localhost:8080/api/sync/';
+  var res = '';
+  var address = 'http://localhost:8080/api/sync/';
+  var res = '';
+  request(address, function (error, response, body) {
+    console.log('error:', error); // Print the error if one occurred
+    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    console.log('body:', body); // Print the HTML for the Google homepage.
+  });
+  sleep.sleep(10);
   blockchain.saveToFile();
 
-
 }
+
+

@@ -83,6 +83,7 @@ class Blockchain{
     sync() {
       //var ip = [];
       let strack = new Blockchain();
+      this.loadFromFile();
       var text = fs.readFileSync('nodelist.txt','utf8');
       var ip = text.split(",");
       var latestblock =  this.chain[this.chain.length - 1];
@@ -282,6 +283,5 @@ app.use('/api', router);
 // =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);
-
 
 //the end

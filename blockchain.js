@@ -160,7 +160,7 @@ class Blockchain{
     }
 
     updateDifficulty(){
-      if ((this.chain.length/15)%1==0) {
+      if ((this.chain.length/16)%1==0) {
         var first = this.chain[this.chain.length-16].timestamp;
         var second = this.chain[this.chain.length-1].timestamp;
         if (second - first > 7200000) {
@@ -168,9 +168,7 @@ class Blockchain{
         }else if (second - first < 7200000) {
           this.difficulty = this.difficulty+1;
         }
-        fs.writeFile('difficulty.txt', this.difficulty, function (err) {
-          if (err) return console.log(err);
-        });
+        fs.writeFileSync('difficulty.txt', this.difficulty);
       }
     }
 }
