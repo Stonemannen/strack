@@ -156,9 +156,7 @@ class Blockchain{
     }
 
     saveToFile(){
-      fs.writeFile('blockchain.txt', JSON.stringify(this.chain), function (err) {
-        if (err) return console.log(err);
-      });
+      fs.writeFileSync('blockchain.txt', JSON.stringify(this.chain));
     }
 
     updateDifficulty(){
@@ -176,6 +174,5 @@ class Blockchain{
       }
     }
 }
-
 const blockchain = new Blockchain();
 module.exports = blockchain;
