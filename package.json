@@ -28,6 +28,7 @@
     "orbit_": "^0.1.0",
     "request": "^2.83.0",
     "requestify": "^0.2.5",
+    "sleep": "^5.1.1",
     "text-encoding": "^0.6.4"
   }
 }

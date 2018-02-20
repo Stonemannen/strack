@@ -72,7 +72,15 @@ var dec = 15
 console.log((n/dec)%1==0);
 //console.log('Mining block 2...');
 //Blockchain.addBlock(new Block(latestblock.index + 1, "21/07/2017", { amount: 8 }));
-Blockchain.sync();//console.log(Blockchain.chain);
+//Blockchain.sync();//console.log(Blockchain.chain);
+var address = 'http://192.168.2.132:8080/api/sync/';
+var res = '';
+console.log("sending");
+request(address, function (error, response, body) {
+  console.log('error:', error); // Print the error if one occurred
+  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+  console.log('body:', body); // Print the HTML for the Google homepage.
+});
 //console.log(JSON.stringify(Blockchain.chain));
 //console.log(JSON.stringify(Blockchain.chain));
 //var privateKey = Transactions.generatePrivateKey();

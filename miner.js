@@ -9,6 +9,7 @@ var settings = JSON.parse(text);
 var publicKey = settings.publicKey;
 var privateKey = settings.privateKey;
 var sleep = require('sleep');
+var http = require('http');
 
 class transaction{
   constructor(type, data) {
@@ -48,37 +49,46 @@ class Block {
 }
 
 var latestblock = blockchain.chain[blockchain.chain.length - 1];
+blockchain.loadFromFile();
 
+var text = fs.readFileSync('transactions.txt','utf8');
+var reward = new transaction("reward", {inputs:[],outputs:[{amount:50000000,address: publicKey}]});
+reward = JSON.stringify(reward);
+reward = JSON.parse(reward)
+var trans = JSON.parse(text);
+var data = [];
+data[0] = reward
+for (var i = 0; i < trans.length; i++) {
+  data[i + 1] = trans[i];
+  trans.splice(i, 1);
+}
 while (true) {
-  blockchain.loadFromFile();
-
-  var text = fs.readFileSync('transactions.txt','utf8');
-  var reward = new transaction("reward", {inputs:[],outputs:[{amount:50000000,address: publicKey}]});
-  reward = JSON.stringify(reward);
-  reward = JSON.parse(reward)
-  var trans = JSON.parse(text);
-  var data = [];
-  data[0] = reward
-  for (var i = 0; i < trans.length; i++) {
-    data[i + 1] = trans[i];
-    trans.splice(i, 1);
-  }
 
   var latestblock = blockchain.chain[blockchain.chain.length - 1];
   blockchain.addBlock(new Block(latestblock.index + 1, Date.now(), data));
   console.log("block mined");
-  var address = 'http://localhost:8080/api/sync/';
+  var address = 'http://192.168.2.132:8080/api/sync/';
   var res = '';
-  var address = 'http://localhost:8080/api/sync/';
-  var res = '';
-  request(address, function (error, response, body) {
-    console.log('error:', error); // Print the error if one occurred
-    console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    console.log('body:', body); // Print the HTML for the Google homepage.
-  });
-  sleep.sleep(10);
-  blockchain.saveToFile();
+  console.log("sending");
+  http.get({host:'localhost:8080',path:'api/sync'
+  }, function(response) {
+    console.log("sent");
+    blockchain.saveToFile();
+    blockchain.loadFromFile();
 
+    var text = fs.readFileSync('transactions.txt','utf8');
+    var reward = new transaction("reward", {inputs:[],outputs:[{amount:50000000,address: publicKey}]});
+    reward = JSON.stringify(reward);
+    reward = JSON.parse(reward)
+    var trans = JSON.parse(text);
+    var data = [];
+    data[0] = reward
+    for (var i = 0; i < trans.length; i++) {
+      data[i + 1] = trans[i];
+      trans.splice(i, 1);
+    }
+  });
 }
+
 
 
