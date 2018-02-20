@@ -76,11 +76,31 @@ console.log((n/dec)%1==0);
 var address = 'http://192.168.2.132:8080/api/sync/';
 var res = '';
 console.log("sending");
-request(address, function (error, response, body) {
+/*request(address, function (error, response, body) {
   console.log('error:', error); // Print the error if one occurred
   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
   console.log('body:', body); // Print the HTML for the Google homepage.
+});*/
+
+http.get({host:'127.0.0.1',path:'/api/sync',port:8080
+}, function(response) {
+  console.log("sent");
+  blockchain.saveToFile();
+  blockchain.loadFromFile();
+
+  var text = fs.readFileSync('transactions.txt','utf8');
+  var reward = new transaction("reward", {inputs:[],outputs:[{amount:50000000,address: publicKey}]});
+  reward = JSON.stringify(reward);
+  reward = JSON.parse(reward)
+  var trans = JSON.parse(text);
+  var data = [];
+  data[0] = reward
+  for (var i = 0; i < trans.length; i++) {
+    data[i + 1] = trans[i];
+    trans.splice(i, 1);
+  }
 });
+
 //console.log(JSON.stringify(Blockchain.chain));
 //console.log(JSON.stringify(Blockchain.chain));
 //var privateKey = Transactions.generatePrivateKey();

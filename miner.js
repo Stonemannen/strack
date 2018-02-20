@@ -1,4 +1,4 @@
-var http = require('http');
+var http = require('httpsync');
 var fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
 var request = require('request');
@@ -9,7 +9,6 @@ var settings = JSON.parse(text);
 var publicKey = settings.publicKey;
 var privateKey = settings.privateKey;
 var sleep = require('sleep');
-var http = require('http');
 
 class transaction{
   constructor(type, data) {
@@ -62,7 +61,7 @@ for (var i = 0; i < trans.length; i++) {
   data[i + 1] = trans[i];
   trans.splice(i, 1);
 }
-while (true) {
+//while (true) {
 
   var latestblock = blockchain.chain[blockchain.chain.length - 1];
   blockchain.addBlock(new Block(latestblock.index + 1, Date.now(), data));
@@ -70,7 +69,7 @@ while (true) {
   var address = 'http://192.168.2.132:8080/api/sync/';
   var res = '';
   console.log("sending");
-  http.get({host:'localhost:8080',path:'api/sync'
+  http.get({host:'127.0.0.1',path:'/api/sync',port:8080
   }, function(response) {
     console.log("sent");
     blockchain.saveToFile();
@@ -88,7 +87,7 @@ while (true) {
       trans.splice(i, 1);
     }
   });
-}
+//}
 
 
 
