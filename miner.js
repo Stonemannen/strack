@@ -3,6 +3,7 @@ var fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
 var request = require('request');
 const blockchain = require('./blockchain');
+const blockchainb = require('./blockchain');
 var crypto = require("crypto");
 var text = fs.readFileSync('wallet.txt','utf8');
 var settings = JSON.parse(text);
@@ -67,17 +68,22 @@ for (var i = 0; i < trans.length; i++) {
   var latestblock = blockchain.chain[blockchain.chain.length - 1];
   blockchain.addBlock(new Block(latestblock.index + 1, Date.now(), data));
   console.log("block mined");
-  blockchain.saveToFile();
+  blockchainb.loadFromFile();
+  var latestblockb = blockchainb.chain[blockchainb.chain.length - 1];
+  if (latestblock == latestblockb) {
+    blockchain.saveToFile();
+    var address = 'http://192.168.2.132:8080/api/sync/';
+    var res = '';
+    console.log("sending");
+    http.get({host:'127.0.0.1',path:'/api/sync',port:8080
+    }, function(response) {
+      console.log("sent");
+
+
+    });
+  }
   //blockchain.sync();
-  var address = 'http://192.168.2.132:8080/api/sync/';
-  var res = '';
-  console.log("sending");
-  http.get({host:'127.0.0.1',path:'/api/sync',port:8080
-  }, function(response) {
-    console.log("sent");
 
-
-  });
 //}
 
 
