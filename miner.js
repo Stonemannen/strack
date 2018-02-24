@@ -13,7 +13,7 @@ var sleep = require('sleep');
 
 class transaction{
   constructor(type, data) {
-    this.id = crypto.randomBytes(32).toString('base64');
+    this.id = crypto.randomBytes(32).toString('hex');
     this.hash = this.calculateHash();
     this.type = type;
     this.data = data;
@@ -69,8 +69,10 @@ for (var i = 0; i < trans.length; i++) {
   blockchain.addBlock(new Block(latestblock.index + 1, Date.now(), data));
   console.log("block mined");
   blockchainb.loadFromFile();
-  var latestblockb = blockchainb.chain[blockchainb.chain.length - 1];
-  if (latestblock == latestblockb) {
+  var latestblockb = blockchainb.chain[blockchainb.chain.length - 2];
+  console.log(latestblock.index);
+  console.log(latestblockb.index);
+  if (latestblock.index == latestblockb.index) {
     blockchain.saveToFile();
     var address = 'http://192.168.2.132:8080/api/sync/';
     var res = '';
