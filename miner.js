@@ -1,4 +1,4 @@
-var http = require('httpsync');
+var http = require('http');
 var fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
 var request = require('request');
@@ -50,6 +50,9 @@ class Block {
 var latestblock = blockchain.chain[blockchain.chain.length - 1];
 blockchain.loadFromFile();
 
+//while (true) {
+blockchain.loadFromFile();
+
 var text = fs.readFileSync('transactions.txt','utf8');
 var reward = new transaction("reward", {inputs:[],outputs:[{amount:50000000,address: publicKey}]});
 reward = JSON.stringify(reward);
@@ -61,32 +64,20 @@ for (var i = 0; i < trans.length; i++) {
   data[i + 1] = trans[i];
   trans.splice(i, 1);
 }
-//while (true) {
-
   var latestblock = blockchain.chain[blockchain.chain.length - 1];
   blockchain.addBlock(new Block(latestblock.index + 1, Date.now(), data));
   console.log("block mined");
-  var address = 'http://192.168.2.132:8080/api/sync/';
+  blockchain.saveToFile();
+  blockchain.sync();
+  /*var address = 'http://192.168.2.132:8080/api/sync/';
   var res = '';
   console.log("sending");
   http.get({host:'127.0.0.1',path:'/api/sync',port:8080
   }, function(response) {
     console.log("sent");
-    blockchain.saveToFile();
-    blockchain.loadFromFile();
 
-    var text = fs.readFileSync('transactions.txt','utf8');
-    var reward = new transaction("reward", {inputs:[],outputs:[{amount:50000000,address: publicKey}]});
-    reward = JSON.stringify(reward);
-    reward = JSON.parse(reward)
-    var trans = JSON.parse(text);
-    var data = [];
-    data[0] = reward
-    for (var i = 0; i < trans.length; i++) {
-      data[i + 1] = trans[i];
-      trans.splice(i, 1);
-    }
-  });
+
+  });*/
 //}
 
 

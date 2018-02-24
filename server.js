@@ -205,9 +205,9 @@ router.get('/downloadBlockchain', function(req, res) {
 
 });
 
-router.get('/addNode', function(req, res) {
-    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    ip = ip.replace('::ffff:','');
+router.get('/addNode:ip', function(req, res) {
+    var request = req.params;
+    var ip = request.ip;
     var text = fs.readFileSync('nodelist.txt','utf8');
     fs.writeFile('nodelist.txt', text + ip + ",", function (err) {
       if (err) return console.log(err);

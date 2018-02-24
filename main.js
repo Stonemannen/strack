@@ -15,6 +15,7 @@ var ossl = require('openssl-wrapper');
 Base58 = require("base-58");
 var arrayBufferToBuffer = require('arraybuffer-to-buffer');
 const CryptoEdDSAUtil = require('./cryptoEdDSAUtil');
+var sleep = require('sleep');
 /*request('http://localhost:8080/api', function (error, response, body) {
   console.log('error:', error); // Print the error if one occurred
   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -76,13 +77,15 @@ console.log((n/dec)%1==0);
 var address = 'http://192.168.2.132:8080/api/sync/';
 var res = '';
 console.log("sending");
+sleep.sleep(10);
+console.log("10");
 /*request(address, function (error, response, body) {
   console.log('error:', error); // Print the error if one occurred
   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
   console.log('body:', body); // Print the HTML for the Google homepage.
 });*/
 
-http.get({host:'127.0.0.1',path:'/api/sync',port:8080
+/*http.get({host:'127.0.0.1',path:'/api/sync',port:8080
 }, function(response) {
   console.log("sent");
   blockchain.saveToFile();
@@ -99,7 +102,7 @@ http.get({host:'127.0.0.1',path:'/api/sync',port:8080
     data[i + 1] = trans[i];
     trans.splice(i, 1);
   }
-});
+});*/
 
 //console.log(JSON.stringify(Blockchain.chain));
 //console.log(JSON.stringify(Blockchain.chain));
