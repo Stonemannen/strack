@@ -68,8 +68,8 @@ for (var i = 0; i < trans.length; i++) {
   blockchain.addBlock(new Block(latestblock.index + 1, Date.now(), data));
   console.log("block mined");
   blockchain.saveToFile();
-  blockchain.sync();
-  /*var address = 'http://192.168.2.132:8080/api/sync/';
+  //blockchain.sync();
+  var address = 'http://192.168.2.132:8080/api/sync/';
   var res = '';
   console.log("sending");
   http.get({host:'127.0.0.1',path:'/api/sync',port:8080
@@ -77,7 +77,7 @@ for (var i = 0; i < trans.length; i++) {
     console.log("sent");
 
 
-  });*/
+  });
 //}
 
 
