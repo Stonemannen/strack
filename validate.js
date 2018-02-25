@@ -1,5 +1,6 @@
 var fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
+const CryptoEdDSAUtil = require('./cryptoEdDSAUtil');
 
 class Block {
   constructor(index, timestamp, data, previousHash, nonce) {
@@ -24,8 +25,6 @@ function validate(){
       const currentBlock = blockchain[i];
       const previousBlock = blockchain[i - 1];
       var testblock = new Block(currentBlock.index, currentBlock.timestamp, currentBlock.data, currentBlock.previousHash, currentBlock.nonce);
-      console.log("test " + testblock.calculateHash());
-      console.log("real" + currentBlock.hash);
 
       if (testblock.calculateHash() !== currentBlock.hash) {
         return false;
@@ -40,7 +39,6 @@ function validate(){
       data = currentBlock.data;
       for (var j = 0; j < data.length; j++) {
         if (data[j].type == "reward") {
-          console.log("reward");
           if (data[j].data.outputs[0].amount !== 50000000) {
             return false;
           }
@@ -50,12 +48,30 @@ function validate(){
             rewards++;
           }
         }
-        console.log(data[j].data);
         data[j].data
+        if (data[j].type == "regualar") {
+          var inamount = 0;
+          var ouamount = 0;
+          for (var k = 0; k < data[j].data.inputs.length; k++) {
+            if (!CryptoEdDSAUtil.verifySignature(data[j].data.inputs[k].address, data[j].data.inputs[k].signature, SHA256(data[j].data.inputs[k].hash + data[j].data.inputs[k].index + data[j].data.inputs[k].amount + data[j].data.inputs[k].address).toString())) {
+              return false;
+            }
+            inamount += data[j].data.inputs[k].amount;
+
+          }
+          for (var k = 0; k < data[j].data.outputs.length; k++) {
+            ouamount += data[j].data.outputs[k].amount;
+          }
+          if (inamount !== ouamount) {
+            console.log(i);
+            return false;
+          }
+        }
       }
       if (rewards > 1) {
         return false;
       }
+      
 
   }
 

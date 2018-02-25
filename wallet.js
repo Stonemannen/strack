@@ -81,7 +81,7 @@ if(process.argv[2] === "-h" || process.argv[2] === "--help"){
     var pub = publicKey;
     var keyPair = CryptoEdDSAUtil.generateKeyPairFromSecret(privateKey);
     for (var i = 0; i < unused.length; i++) {
-      unused[i].signature = CryptoEdDSAUtil.signHash(keyPair, SHA256(unused[i].hash + unused[i].index + unused[i].amount + unused[i].address));
+      unused[i].signature = CryptoEdDSAUtil.signHash(keyPair, SHA256(unused[i].hash + unused[i].index + unused[i].amount + unused[i].address).toString());
     }
     var data = {
       inputs: unused,

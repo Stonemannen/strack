@@ -16,6 +16,10 @@ Base58 = require("base-58");
 var arrayBufferToBuffer = require('arraybuffer-to-buffer');
 const CryptoEdDSAUtil = require('./cryptoEdDSAUtil');
 var sleep = require('sleep');
+var text = fs.readFileSync('wallet.txt','utf8');
+var settings = JSON.parse(text);
+var publicKey = settings.publicKey;
+var privateKey = settings.privateKey;
 /*request('http://localhost:8080/api', function (error, response, body) {
   console.log('error:', error); // Print the error if one occurred
   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -77,8 +81,27 @@ console.log((n/dec)%1==0);
 var address = 'http://192.168.2.132:8080/api/sync/';
 var res = '';
 console.log("sending");
-sleep.sleep(10);
+//sleep.sleep(10);
 console.log("10");
+
+var text = fs.readFileSync('blockchain.txt','utf8');
+var blockchainab = JSON.parse(text);
+
+console.log(CryptoEdDSAUtil.verifySignature(blockchainab[3].data[1].data.inputs[0].address, blockchainab[3].data[1].data.inputs[0].signature, SHA256(blockchainab[3].data[1].data.inputs[0].hash + blockchainab[3].data[1].data.inputs[0].index + blockchainab[3].data[1].data.inputs[0].amount + blockchainab[3].data[1].data.inputs[0].address)));
+
+var a = blockchainab[3].data[1].data.inputs[0].address
+console.log(a);
+var b = blockchainab[3].data[1].data.inputs[0].signature
+console.log(b);
+var c = SHA256(blockchainab[3].data[1].data.inputs[0].hash + blockchainab[3].data[1].data.inputs[0].index + blockchainab[3].data[1].data.inputs[0].amount + blockchainab[3].data[1].data.inputs[0].address).toString();
+console.log("c");
+console.log(c);
+console.log("res " + CryptoEdDSAUtil.verifySignature(a,b,c));
+
+var keypair = CryptoEdDSAUtil.generateKeyPairFromSecret(privateKey);
+var sig = CryptoEdDSAUtil.signHash(keypair, c)
+console.log(sig);
+console.log(CryptoEdDSAUtil.verifySignature("9dc09fe0858a671635e23add95cc30af6776c9702d3786d4d45aa4e1b2a1e4d4", sig, c));
 /*request(address, function (error, response, body) {
   console.log('error:', error); // Print the error if one occurred
   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
