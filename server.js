@@ -270,6 +270,7 @@ router.post('/addBlock', function(req, res) {
     var rawBlock = JSON.parse(block);
     if (rawBlock.index == bc.getLatestBlock + 1) {
       tem.addRawBlock(rawBlock);
+      console.log(validate.validate(tem.chain));
       if (validate.validate(tem.chain)) {
         bc.addRawBlock(rawBlock)
         bc.saveToFile();
