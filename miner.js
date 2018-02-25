@@ -73,17 +73,26 @@ for (var i = 0; i < trans.length; i++) {
   console.log(latestblock.index);
   console.log(latestblockb.index);
   if (latestblock.index == latestblockb.index) {
-    blockchain.saveToFile();
+    //blockchain.saveToFile();
     fs.writeFileSync('transactions.txt', "[]");
     var address = 'http://192.168.2.132:8080/api/sync/';
     var res = '';
     console.log("sending");
-    http.get({host:'127.0.0.1',path:'/api/sync',port:8080
+    var address = 'http://127.0.0.1:8080/api/addBlock'
+    latestblock = blockchain.chain[blockchain.chain.length - 1];
+    request.post({
+      headers: {'content-type' : 'application/x-www-form-urlencoded'},
+      url:     address,
+      body:    "block=" + JSON.stringify(blockchain.chain[latestblock])
+    }, function(error, response, body){
+      console.log(body);
+    });
+    /*http.get({host:'127.0.0.1',path:'/api/sync',port:8080
     }, function(response) {
       console.log("sent");
 
 
-    });
+    });*/
   }
   //blockchain.sync();
 

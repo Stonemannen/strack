@@ -277,7 +277,7 @@ router.post('/addBlock', function(req, res) {
       }
 
     }
-
+    bc.sync();
     //console.log(block);
     res.send("200");
 });
