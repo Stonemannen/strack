@@ -116,5 +116,3 @@ exports.validate = function(blockchain){
 
   return true;
 }
-var h = validate();
-console.log(h);
