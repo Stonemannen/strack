@@ -265,8 +265,11 @@ router.post('/addBlock', function(req, res) {
     bc.loadFromFile();
     var block = req.body.block;
     var rawBlock = JSON.parse(block);
-    bc.addRawBlock(rawBlock);
-    bc.saveToFile();
+    if (rawBlock.index == bc.getLatestBlock + 1) {
+      bc.addRawBlock(rawBlock);
+      bc.saveToFile();
+    }
+
     //console.log(block);
     res.send("200");
 });
