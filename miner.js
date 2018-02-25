@@ -78,21 +78,23 @@ for (var i = 0; i < trans.length; i++) {
     var address = 'http://192.168.2.132:8080/api/sync/';
     var res = '';
     console.log("sending");
+
     var address = 'http://127.0.0.1:8080/api/addBlock'
     latestblock = blockchain.chain[blockchain.chain.length - 1];
+    console.log(JSON.stringify(blockchain.chain[latestblock.index]));
     request.post({
       headers: {'content-type' : 'application/x-www-form-urlencoded'},
       url:     address,
-      body:    "block=" + JSON.stringify(blockchain.chain[latestblock])
+      body:    "block=" + JSON.stringify(blockchain.chain[latestblock.index])
     }, function(error, response, body){
       console.log(body);
     });
-    /*http.get({host:'127.0.0.1',path:'/api/sync',port:8080
+    http.get({host:'127.0.0.1',path:'/api/sync',port:8080
     }, function(response) {
       console.log("sent");
 
 
-    });*/
+    });
   }
   //blockchain.sync();
 

@@ -55,7 +55,10 @@ class Block {
 class Blockchain{
     constructor() {
         this.chain = [this.createGenesisBlock()];
-        this.difficulty = 2;
+        this.difficulty = Number(fs.readFileSync('difficulty.txt','utf8'));
+        if ((this.chain.length/15)%1==0) {
+          this.updateDifficulty();
+        }
     }
 
     createGenesisBlock() {
@@ -70,10 +73,12 @@ class Blockchain{
         newBlock.previousHash = this.getLatestBlock().hash;
         newBlock.mineBlock(this.difficulty);
         this.chain.push(newBlock);
+        this.updateDifficulty();
     }
 
     addRawBlock(newBlock) {
       this.chain.push(newBlock);
+      this.updateDifficulty();
     }
 
     isChainValid() {
@@ -96,11 +101,6 @@ class Blockchain{
     sync() {
       //var ip = [];
       let strack = new Blockchain();
-      var text = fs.readFileSync('blockchain.txt','utf8');
-      var blockchain = JSON.parse(text);
-      for(let i = 1; i < blockchain.length; i++){
-        this.chain[i] = blockchain[i];
-      }
       var text = fs.readFileSync('nodelist.txt','utf8');
       var ip = text.split(",");
       var latestblock =  this.chain[this.chain.length - 1];
@@ -157,7 +157,7 @@ class Blockchain{
 
 
       }
-
+      this.updateDifficulty();
     }
 
     loadFromFile(){
@@ -181,9 +181,20 @@ class Blockchain{
     }
 
     saveToFile(){
-      fs.writeFile('blockchain.txt', JSON.stringify(this.chain), function (err) {
-        if (err) return console.log(err);
-      });
+      fs.writeFileSync('blockchain.txt', JSON.stringify(this.chain));
+    }
+
+    updateDifficulty(){
+      if ((this.chain.length/16)%1==0) {
+        var first = this.chain[this.chain.length-16].timestamp;
+        var second = this.chain[this.chain.length-1].timestamp;
+        if (second - first > 7200000) {
+          this.difficulty = this.difficulty-1;
+        }else if (second - first < 7200000) {
+          this.difficulty = this.difficulty+1;
+        }
+        fs.writeFileSync('difficulty.txt', this.difficulty);
+      }
     }
 }
 
@@ -263,12 +274,14 @@ router.get('/sync', function(req, res) {
 });*/
 
 router.post('/addBlock', function(req, res) {
+  console.log("addBlock");
     bc.loadFromFile();
     var tem = new Blockchain();
     tem.loadFromFile();
     var block = req.body.block;
     var rawBlock = JSON.parse(block);
-    if (rawBlock.index == bc.getLatestBlock + 1) {
+    console.log(rawBlock.index == bc.chain[bc.chain.length - 1].index + 1);
+    if (rawBlock.index == bc.chain[bc.chain.length - 1].index + 1) {
       tem.addRawBlock(rawBlock);
       console.log(validate.validate(tem.chain));
       if (validate.validate(tem.chain)) {
@@ -277,7 +290,7 @@ router.post('/addBlock', function(req, res) {
       }
 
     }
-    bc.sync();
+    //bc.sync();
     //console.log(block);
     res.send("200");
 });
