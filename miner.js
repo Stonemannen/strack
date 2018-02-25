@@ -74,6 +74,7 @@ for (var i = 0; i < trans.length; i++) {
   console.log(latestblockb.index);
   if (latestblock.index == latestblockb.index) {
     blockchain.saveToFile();
+    fs.writeFileSync('transactions.txt', "[]");
     var address = 'http://192.168.2.132:8080/api/sync/';
     var res = '';
     console.log("sending");

@@ -1,7 +1,7 @@
 var fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
 const CryptoEdDSAUtil = require('./cryptoEdDSAUtil');
-
+var difficulty = 2;
 class Block {
   constructor(index, timestamp, data, previousHash, nonce) {
     this.index = index;
@@ -18,9 +18,43 @@ class Block {
 
 }
 
+class Blockchain{
+    constructor() {
+        this.chain = [this.createGenesisBlock()];
+        this.difficulty = difficulty;
+        if ((this.chain.length/16)%1==0) {
+          this.updateDifficulty();
+        }
+    }
+
+    createGenesisBlock() {
+        return new Block(0, "01/01/2017", "Genesis block", "0");
+    }
+
+    addRawBlock(newBlock) {
+      this.chain.push(newBlock);
+      this.updateDifficulty();
+    }
+
+    updateDifficulty(){
+      if ((this.chain.length/16)%1==0) {
+        var first = this.chain[this.chain.length-16].timestamp;
+        var second = this.chain[this.chain.length-1].timestamp;
+        if (second - first > 7200000) {
+          this.difficulty = this.difficulty-1;
+        }else if (second - first < 7200000) {
+          this.difficulty = this.difficulty+1;
+        }
+        difficulty = this.difficulty;
+      }
+    }
+
+}
+
 function validate(){
   var text = fs.readFileSync('blockchain.txt','utf8');
   var blockchain = JSON.parse(text);
+  var blockchaint = new Blockchain;
   for (let i = 2; i < blockchain.length; i++){
       const currentBlock = blockchain[i];
       const previousBlock = blockchain[i - 1];
@@ -65,13 +99,17 @@ function validate(){
           if (inamount !== ouamount) {
             console.log(i);
             return false;
+
           }
         }
       }
       if (rewards > 1) {
         return false;
       }
-      
+      blockchaint.addRawBlock(currentBlock);
+      if (currentBlock.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+        return false;
+      }
 
   }
 

@@ -11,7 +11,7 @@ var balance = 0;
 var stdin = process.openStdin();
 class transaction{
   constructor(type, data) {
-    this.id = crypto.randomBytes(32).toString('base64');
+    this.id = crypto.randomBytes(32).toString('hex');
     this.hash = this.calculateHash();
     this.type = type;
     this.data = data;
