@@ -2,6 +2,7 @@ var fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
 const CryptoEdDSAUtil = require('./cryptoEdDSAUtil');
 var difficulty = 2;
+var exports = module.exports = {};
 class Block {
   constructor(index, timestamp, data, previousHash, nonce) {
     this.index = index;
@@ -51,9 +52,9 @@ class Blockchain{
 
 }
 
-function validate(){
-  var text = fs.readFileSync('blockchain.txt','utf8');
-  var blockchain = JSON.parse(text);
+exports.validate = function(blockchain){
+  //var text = fs.readFileSync('blockchain.txt','utf8');
+  //var blockchain = JSON.parse(text);
   var blockchaint = new Blockchain;
   for (let i = 2; i < blockchain.length; i++){
       const currentBlock = blockchain[i];

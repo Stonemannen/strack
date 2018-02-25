@@ -23,6 +23,7 @@ var fs = require('fs');
 const SHA256 = require("crypto-js/sha256");
 var request = require('request');
 var bodyParser = require('body-parser');
+var validate = require('./validate');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -263,11 +264,17 @@ router.get('/sync', function(req, res) {
 
 router.post('/addBlock', function(req, res) {
     bc.loadFromFile();
+    var tem = new Blockchain();
+    tem.loadFromFile();
     var block = req.body.block;
     var rawBlock = JSON.parse(block);
     if (rawBlock.index == bc.getLatestBlock + 1) {
-      bc.addRawBlock(rawBlock);
-      bc.saveToFile();
+      tem.addRawBlock(rawBlock);
+      if (validate.validate(tem.chain)) {
+        bc.addRawBlock(rawBlock)
+        bc.saveToFile();
+      }
+
     }
 
     //console.log(block);
